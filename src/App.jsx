@@ -173,7 +173,7 @@ const App = () => {
                   }`}
                   type="text"
                   value={lastName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={(e) => setLastName(e.target.value)}
                 />
                 {validationErrors.lastName && (
                   <p className="text-red-500">{validationErrors.lastName}</p>
@@ -187,7 +187,7 @@ const App = () => {
                   }`}
                   type="text"
                   value={email}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 {validationErrors.email && (
                   <p className="text-red-500">{validationErrors.email}</p>
@@ -199,9 +199,9 @@ const App = () => {
                   className={`border border-gray-300 rounded px-2 py-2 w-full ${
                     validationErrors.age ? "border-red-500" : ""
                   }`}
-                  type="text"
+                  type="number"
                   value={age}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={(e) => setAge(e.target.value)}
                 />
                 {validationErrors.age && (
                   <p className="text-red-500">{validationErrors.age}</p>
