@@ -1,5 +1,3 @@
-// App.jsx
-
 import { useState, useEffect } from "react";
 import {
   isIndexedDBSupported,
@@ -36,7 +34,7 @@ const App = () => {
     isIndexedDBSupported("myDB").then((result) => {
       setIsDBSupported(result);
       if (result) {
-        // Retrieve data from IndexedDB on component mount
+        // Retrieveing data from IndexedDB on component mount
         handleRetrieveData();
       }
     });
