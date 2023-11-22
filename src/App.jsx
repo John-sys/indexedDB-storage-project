@@ -8,6 +8,16 @@ import {
   deleteDataFromIndexedDb,
   updateDataInIndexedDb,
 } from "indexeddb-package";
+import * as Yup from "yup";
+
+const userSchema = Yup.object().shape({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  age: Yup.number()
+    .positive("Age must be a positive number")
+    .required("Age is required"),
+});
 
 const App = () => {
   const [isDBSupported, setIsDBSupported] = useState(false);
@@ -19,6 +29,7 @@ const App = () => {
   const [email, setEmail] = useState("");
   const [selectedUser, setSelectedUser] = useState({});
   const [age, setAge] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
     // Check if IndexedDB is supported
@@ -32,20 +43,33 @@ const App = () => {
   }, []);
 
   const handleInsertData = () => {
-    const data = {
-      id: allUsers.length + 1,
-      firstName,
-      lastName,
-      email,
-      age,
-    };
-    insertDataInIndexedDb("myDB", [data])
+    userSchema
+      .validate({ firstName, lastName, email, age }, { abortEarly: false })
       .then(() => {
-        alert("User added!");
-        resetForm();
-        handleRetrieveData();
+        setValidationErrors({});
+        const data = {
+          id: allUsers.length + 1,
+          firstName,
+          lastName,
+          email,
+          age,
+        };
+        insertDataInIndexedDb("myDB", [data])
+          .then(() => {
+            alert("User added!");
+            resetForm();
+            handleRetrieveData();
+          })
+          .catch((error) => console.error(error));
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        const errors = {};
+        error.inner.forEach((err) => {
+          errors[err.path] = err.message;
+        });
+        setValidationErrors(errors);
+        // alert(error.message);
+      });
   };
 
   const handleRetrieveData = () => {
@@ -55,22 +79,34 @@ const App = () => {
   };
 
   const handleUpdateData = () => {
-    const updatedData = {
-      id: selectedUser.id,
-      firstName,
-      lastName,
-      email,
-      age,
-    };
-    updateDataInIndexedDb("myDB", updatedData)
+    userSchema
+      .validate({ firstName, lastName, email, age }, { abortEarly: false })
       .then(() => {
-        alert("User updated!");
-        resetForm();
-        setEditUser(false);
-        handleRetrieveData();
-        setSelectedUser({});
+        setValidationErrors({});
+        const updatedData = {
+          id: selectedUser.id,
+          firstName,
+          lastName,
+          email,
+          age,
+        };
+        updateDataInIndexedDb("myDB", updatedData)
+          .then(() => {
+            alert("User updated!");
+            resetForm();
+            setEditUser(false);
+            handleRetrieveData();
+            setSelectedUser({});
+          })
+          .catch((error) => console.error(error));
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        const errors = {};
+        error.inner.forEach((err) => {
+          errors[err.path] = err.message;
+        });
+        setValidationErrors(errors);
+      });
   };
 
   const handleDeleteData = (user) => {
@@ -112,40 +148,64 @@ const App = () => {
           {addUser || editUser ? (
             <div className="my-4">
               <div className="mb-4">
-                <label className="block font-bold text-[18px]">First Name:</label>
+                <label className="block font-bold text-[18px]">
+                  First Name:
+                </label>
                 <input
-                  className="border border-gray-300 rounded px-2 py-2 w-full"
+                  className={`border border-gray-300 rounded px-2 py-2 w-full ${
+                    validationErrors.firstName ? "border-red-500" : ""
+                  }`}
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
+                {validationErrors.firstName && (
+                  <p className="text-red-500">{validationErrors.firstName}</p>
+                )}
               </div>
               <div className="mb-4 ">
-                <label className="block font-bold text-[18px]">Last Name:</label>
+                <label className="block font-bold text-[18px]">
+                  Last Name:
+                </label>
                 <input
-                  className="border border-gray-300 rounded px-2 py-2 w-full"
+                  className={`border border-gray-300 rounded px-2 py-2 w-full ${
+                    validationErrors.lastName ? "border-red-500" : ""
+                  }`}
                   type="text"
                   value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  onChange={(e) => setFirstName(e.target.value)}
                 />
+                {validationErrors.lastName && (
+                  <p className="text-red-500">{validationErrors.lastName}</p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block font-bold text-[18px]">Email:</label>
                 <input
-                  className="border border-gray-300 rounded px-2 py-2 w-full"
-                  type="email"
+                  className={`border border-gray-300 rounded px-2 py-2 w-full ${
+                    validationErrors.email ? "border-red-500" : ""
+                  }`}
+                  type="text"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setFirstName(e.target.value)}
                 />
+                {validationErrors.email && (
+                  <p className="text-red-500">{validationErrors.email}</p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block font-bold text-[18px]">Age:</label>
                 <input
-                  className="border border-gray-300 rounded px-2 py-2 w-full"
-                  type="number"
+                  className={`border border-gray-300 rounded px-2 py-2 w-full ${
+                    validationErrors.age ? "border-red-500" : ""
+                  }`}
+                  type="text"
                   value={age}
-                  onChange={(e) => setAge(e.target.value)}
+                  onChange={(e) => setFirstName(e.target.value)}
                 />
+                {validationErrors.age && (
+                  <p className="text-red-500">{validationErrors.age}</p>
+                )}
               </div>
               <div className="flex flex-col w-full space-y-4">
                 <button
