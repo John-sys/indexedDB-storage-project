@@ -40,21 +40,27 @@ const App = () => {
     });
   }, []);
 
-  const handleInsertData = () => {
+  const handleInsertOrUpdateData = () => {
+    const data = {
+      id: selectedUser.id || (allUsers.length > 0 ? allUsers.length + 1 : 1),
+      firstName,
+      lastName,
+      email,
+      age,
+    };
+
     userSchema
-      .validate({ firstName, lastName, email, age }, { abortEarly: false })
+      .validate(data, { abortEarly: false })
       .then(() => {
         setValidationErrors({});
-        const data = {
-          id: allUsers ? allUsers.length + 1 : 1,
-          firstName,
-          lastName,
-          email,
-          age,
-        };
-        insertDataInIndexedDb("myDB", [data])
+        const operation = selectedUser.id ? "update" : "insert";
+
+        (operation === "insert"
+          ? insertDataInIndexedDb("myDB", [data])
+          : updateDataInIndexedDb("myDB", data)
+        )
           .then(() => {
-            alert("User added!");
+            alert(`User ${operation === "insert" ? "added" : "updated"}!`);
             resetForm();
             handleRetrieveData();
           })
@@ -74,37 +80,6 @@ const App = () => {
     retrieveDataFromIndexedDb("myDB")
       .then((data) => setAllUsers(data))
       .catch((error) => console.error(error));
-  };
-
-  const handleUpdateData = () => {
-    userSchema
-      .validate({ firstName, lastName, email, age }, { abortEarly: false })
-      .then(() => {
-        setValidationErrors({});
-        const updatedData = {
-          id: selectedUser.id,
-          firstName,
-          lastName,
-          email,
-          age,
-        };
-        updateDataInIndexedDb("myDB", updatedData)
-          .then(() => {
-            alert("User updated!");
-            resetForm();
-            setEditUser(false);
-            handleRetrieveData();
-            setSelectedUser({});
-          })
-          .catch((error) => console.error(error));
-      })
-      .catch((error) => {
-        const errors = {};
-        error.inner.forEach((err) => {
-          errors[err.path] = err.message;
-        });
-        setValidationErrors(errors);
-      });
   };
 
   const handleDeleteData = (user) => {
@@ -143,7 +118,7 @@ const App = () => {
               Add User
             </button>
           </div>
-          {addUser || editUser ? (
+          {(addUser || editUser) && (
             <div className="my-4">
               <div className="mb-4">
                 <label className="block font-bold text-[18px]">
@@ -208,19 +183,20 @@ const App = () => {
               <div className="flex flex-col w-full space-y-4">
                 <button
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
-                  onClick={addUser ? handleInsertData : handleUpdateData}
+                  onClick={handleInsertOrUpdateData}
                 >
                   {addUser ? "Add User" : "Update User"}
                 </button>
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => resetForm()}
+                  onClick={resetForm}
                 >
                   Cancel
                 </button>
               </div>
             </div>
-          ) : null}
+          )}
+
           {allUsers && (
             <div className="mt-12">
               <h2 className="text-xl font-bold mb-4">User List</h2>
