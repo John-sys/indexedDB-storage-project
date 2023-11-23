@@ -46,7 +46,7 @@ const App = () => {
       .then(() => {
         setValidationErrors({});
         const data = {
-          id: allUsers.length + 1,
+          id: allUsers ? allUsers.length + 1 : 1,
           firstName,
           lastName,
           email,
@@ -66,7 +66,7 @@ const App = () => {
           errors[err.path] = err.message;
         });
         setValidationErrors(errors);
-        // alert(error.message);
+        alert(error.message);
       });
   };
 
@@ -221,36 +221,38 @@ const App = () => {
               </div>
             </div>
           ) : null}
-          <div className="mt-12">
-            <h2 className="text-xl font-bold mb-4">User List</h2>
-            <ul>
-              {allUsers.map((user) => (
-                <li key={user.id} className="mb-2">
-                  {user.firstName} {user.lastName} ({user.age} years old) -{" "}
-                  {user.email}{" "}
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2"
-                    onClick={() => {
-                      setEditUser(true);
-                      setSelectedUser(user);
-                      setFirstName(user.firstName);
-                      setLastName(user.lastName);
-                      setEmail(user.email);
-                      setAge(user.age);
-                    }}
-                  >
-                    Edit
-                  </button>{" "}
-                  <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                    onClick={() => handleDeleteData(user)}
-                  >
-                    Delete
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {allUsers && (
+            <div className="mt-12">
+              <h2 className="text-xl font-bold mb-4">User List</h2>
+              <ul>
+                {allUsers.map((user) => (
+                  <li key={user.id} className="mb-2">
+                    {user.firstName} {user.lastName} ({user.age} years old) -{" "}
+                    {user.email}{" "}
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2"
+                      onClick={() => {
+                        setEditUser(true);
+                        setSelectedUser(user);
+                        setFirstName(user.firstName);
+                        setLastName(user.lastName);
+                        setEmail(user.email);
+                        setAge(user.age);
+                      }}
+                    >
+                      Edit
+                    </button>{" "}
+                    <button
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                      onClick={() => handleDeleteData(user)}
+                    >
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       ) : (
         <div>
