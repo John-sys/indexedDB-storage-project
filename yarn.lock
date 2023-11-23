@@ -1062,10 +1062,10 @@ imurmurhash@^0.1.4:
   resolved "https://registry.npmjs.org/imurmurhash/-/imurmurhash-0.1.4.tgz"
   integrity sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==
 
-indexeddb-package@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.npmjs.org/indexeddb-package/-/indexeddb-package-1.0.10.tgz"
-  integrity sha512-HRVUWRO4xR4p2C/OS6Qlhomt3vBgXa1KVkiNUXrhe3x/Vy4G6djQ2nrlfweuxDDuSmM/Ilw9PvOPfrFM6hSSkg==
+indexeddb-package@^1.0.15:
+  version "1.0.15"
+  resolved "https://registry.npmjs.org/indexeddb-package/-/indexeddb-package-1.0.15.tgz"
+  integrity sha512-Ga5CyFKCq8kLCS2ewsVD5vv04pFkk9BYlkfioqKiFIWtcPtspokZrOXh4wLbMYLZgTKSdiSVdMdO2bGjWyWOWQ==
 
 inflight@^1.0.4:
   version "1.0.6"

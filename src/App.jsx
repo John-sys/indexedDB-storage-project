@@ -71,17 +71,17 @@ const App = () => {
       }
 
       resetForm();
-      handleRetrieveData();
+      await handleRetrieveData();
     } catch (error) {
       const errors = {};
       // error.inner.forEach((err) => {
       //   errors[err.path] = err.message;
       // });
       if (error.inner) {
-      error.inner.forEach((err) => {
-        errors[err.path] = err.message;
-      });
-    }
+        error.inner.forEach((err) => {
+          errors[err.path] = err.message;
+        });
+      }
       setValidationErrors(errors);
     }
   };
@@ -89,7 +89,7 @@ const App = () => {
   const handleRetrieveData = async () => {
     try {
       const data = await retrieveDataFromIndexedDb("myDB");
-      setAllUsers(data);
+      setAllUsers(data || []);
     } catch (error) {
       console.error(error);
     }
