@@ -74,9 +74,14 @@ const App = () => {
       handleRetrieveData();
     } catch (error) {
       const errors = {};
+      // error.inner.forEach((err) => {
+      //   errors[err.path] = err.message;
+      // });
+      if (error.inner) {
       error.inner.forEach((err) => {
         errors[err.path] = err.message;
       });
+    }
       setValidationErrors(errors);
     }
   };
@@ -129,7 +134,66 @@ const App = () => {
           </div>
           {addUser || editUser ? (
             <div className="my-4">
-              {/* ... (unchanged code for form inputs) */}
+              <div className="mb-4">
+                <label className="block font-bold text-[18px]">
+                  First Name:
+                </label>
+                <input
+                  className={`border border-gray-300 rounded px-2 py-2 w-full ${
+                    validationErrors.firstName ? "border-red-500" : ""
+                  }`}
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                {validationErrors.firstName && (
+                  <p className="text-red-500">{validationErrors.firstName}</p>
+                )}
+              </div>
+              <div className="mb-4 ">
+                <label className="block font-bold text-[18px]">
+                  Last Name:
+                </label>
+                <input
+                  className={`border border-gray-300 rounded px-2 py-2 w-full ${
+                    validationErrors.lastName ? "border-red-500" : ""
+                  }`}
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+                {validationErrors.lastName && (
+                  <p className="text-red-500">{validationErrors.lastName}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label className="block font-bold text-[18px]">Email:</label>
+                <input
+                  className={`border border-gray-300 rounded px-2 py-2 w-full ${
+                    validationErrors.email ? "border-red-500" : ""
+                  }`}
+                  type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                {validationErrors.email && (
+                  <p className="text-red-500">{validationErrors.email}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label className="block font-bold text-[18px]">Age:</label>
+                <input
+                  className={`border border-gray-300 rounded px-2 py-2 w-full ${
+                    validationErrors.age ? "border-red-500" : ""
+                  }`}
+                  type="number"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                />
+                {validationErrors.age && (
+                  <p className="text-red-500">{validationErrors.age}</p>
+                )}
+              </div>
               <div className="flex flex-col w-full space-y-4">
                 <button
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
