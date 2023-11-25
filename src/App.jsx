@@ -227,8 +227,8 @@ const App = () => {
               <ul>
                 {allUsers.map((user) => (
                   <li key={user.id} className="mb-2">
-                    {user.firstName} {user.lastName} ({user.age} years old) -{" "}
-                    {user.email}{" "}
+                    {user.firstName} {user.lastName} ({user.age} years old)
+                    {user.email}
                     <button
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2"
                       onClick={() => {
